@@ -1,0 +1,19 @@
+{
+  "name": "LegoForm",
+  "version": "0.0.0",
+  "description": "A simple form builder",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mafengwo/LegoForm"
+  },
+  "license": "MIT",
+  "dependencies": {
+    
+  },
+  "devDependencies": {
+    "express": "^4.13.3"
+  }
+}
