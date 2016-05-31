@@ -1,0 +1,27 @@
+{
+  "name": "LegoForm",
+  "version": "0.0.1",
+  "scripts": {
+    "test": "cross-env NODE_ENV=test karma --recursive"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mafengwo/LegoForm"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mafengwo/LegoForm/issues"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "angular": "^1.5.6",
+    "angular-mocks": "^1.5.6",
+    "chai": "^3.5.0",
+    "cross-env": "^1.0.7",
+    "karma": "^0.13.22",
+    "karma-chai": "^0.1.0",
+    "karma-mocha": "^1.0.1",
+    "mocha": "^2.5.3",
+    "underscore": "^1.8.3"
+  }
+}
