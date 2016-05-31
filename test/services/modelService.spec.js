@@ -72,15 +72,17 @@ describe("Unit test: ModelService", function () {
     });
 
     it('should got correct primary model id', function () {
-        console.log(model.getPrimaryModelId());
+        
         model.getPrimaryModelId().should.equal(1);
     });
 
     it('should got correct primary column name', function () {
+        
         model.getPrimaryColumnName().should.equal('id');
     });
 
     it('should got correct primary lego name', function () {
+        
         model.getPrimaryLegoName().should.equal(['Passenger', 'id', 1, 1].join('$$'));
     });
 
