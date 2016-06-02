@@ -68,7 +68,7 @@ describe("Unit test: ModelService", function () {
 
     it('should be initialized', function () {
         
-        model._modelDef.should.be.a('object');
+        model.getModelById(1).kind.should.equal('Passenger');
     });
 
     it('should got correct primary model id', function () {
