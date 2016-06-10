@@ -50,40 +50,39 @@ describe("Unit test: ModelService", function () {
         ]
     };
 
-    var model;
-
+    var modelService;
     beforeEach(module('LegoForm'));
 
-    beforeEach(inject(function (_modelService_) {
+    beforeEach(inject(function ($injector) {
 
-        _modelService_.should.not.to.equal(null);
-        model = new _modelService_.Model();
-        model.initModelDef(_Mock_Model, _Mock_Schema);
+        modelService = $injector.get('modelService');
+        modelService.should.not.to.equal(null);
+        modelService.initModelDef(_Mock_Model, _Mock_Schema);
     }));
 
     it('should modelService be a object', function () {
 
-        model.should.be.a('object');
+        modelService.should.be.a('object');
     });
 
     it('should be initialized', function () {
-        
-        model.getModelById(1).kind.should.equal('Passenger');
+
+        modelService.getModelById(1).kind.should.equal('Passenger');
     });
 
     it('should got correct primary model id', function () {
-        
-        model.getPrimaryModelId().should.equal(1);
+
+        modelService.getPrimaryModelId().should.equal(1);
     });
 
     it('should got correct primary column name', function () {
-        
-        model.getPrimaryColumnName().should.equal('id');
+
+        modelService.getPrimaryColumnName().should.equal('id');
     });
 
     it('should got correct primary lego name', function () {
-        
-        model.getPrimaryLegoName().should.equal(['Passenger', 'id', 1, 1].join('$$'));
+
+        modelService.getPrimaryLegoName().should.equal(['Passenger', 'id', 1, 1].join('$$'));
     });
 
 
