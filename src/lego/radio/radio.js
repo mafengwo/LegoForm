@@ -10,9 +10,9 @@ angular.module('LegoForm')
             $scope.radioOptions = {};
         }
 
-        this.init = function (_mgModelCtrl) {
+        this.init = function (_ngModelCtrl) {
 
-            ngModelCtrl = _mgModelCtrl;
+            ngModelCtrl = _ngModelCtrl;
         };
 
         $scope.select = function (one) {
