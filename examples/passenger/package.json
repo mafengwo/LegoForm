@@ -1,7 +1,7 @@
 {
-  "name": "LegoForm Example - Passenger",
-  "version": "0.0.0",
-  "description": "A simple form builder",
+  "name": "Passenger_Form",
+  "version": "0.0.1",
+  "description": "Simple demo of LegoForm",
   "scripts": {
     "start": "node server.js"
   },
