@@ -1,7 +1,7 @@
 /**
  * Created by mafengwo on 16/6/13.
  */
-angular.module('LegoForm')
+angular.module('lf.lego.radio', [])
     .controller('RadioController', ['$scope', function ($scope) {
 
         var ngModelCtrl;
@@ -15,10 +15,17 @@ angular.module('LegoForm')
             ngModelCtrl = _ngModelCtrl;
         };
 
-        $scope.select = function (one) {
+        $scope.check = function (one, $event) {
 
-            $scope.selected = one;
+            if ($event.target.tagName !== 'INPUT') {
+                return false;
+            }
+            
             ngModelCtrl.$setViewValue(one.value);
+        };
+        
+        $scope.isChecked = function (one) {
+            return ngModelCtrl.$modelValue === one.value;
         }
     }])
     .directive('legoRadio', function () {
@@ -28,7 +35,7 @@ angular.module('LegoForm')
             scope: {
                 radioOptions: '=?'
             },
-            templateUrl: 'radio.html',
+            templateUrl: 'lf/radio.html',
             controller: 'RadioController',
             link: function (scope, elem, attrs, ctrls) {
 

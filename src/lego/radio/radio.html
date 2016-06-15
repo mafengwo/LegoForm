@@ -1,6 +1,6 @@
-<div class="lf-dct-radio">
-    <label class="item" ng-repeat="one in radioOptions" ng-click="select(one)">
-        <input ng-checked="selected.value === one.value" type="radio">
+<div class="lf-lego-radio">
+    <label class="item" ng-repeat="one in radioOptions" ng-click="check(one, $event)">
+        <input type="radio" ng-checked="isChecked(one)">
         <span class="label" ng-bind="one.label"></span>
     </label>
 </div>
