@@ -1,7 +1,4 @@
-/*
- * Model Service
- */
-angular.module('LegoForm')
+angular.module('lf.service.model', [])
     .service('modelService', function () {
 
 

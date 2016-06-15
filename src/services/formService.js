@@ -1,7 +1,7 @@
 /*
  * Form Service 
  */
-angular.module('LegoForm')
+angular.module('lf.service.form', [])
     .service('formService', ['modelService', function (modelService) {
 
         var _TYPE_DEF = {
