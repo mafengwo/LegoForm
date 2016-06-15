@@ -1,0 +1,6 @@
+<div class="lf-lego-checkbox">
+    <label class="item" ng-repeat="one in checkboxOptions" ng-click="check(one, $event)">
+        <input type="checkbox" ng-checked="isChecked(one)">
+        <span class="label" ng-bind="one.label"></span>
+    </label>
+</div>
