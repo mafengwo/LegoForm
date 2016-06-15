@@ -1,5 +1,7 @@
 # LegoForm
 
+[![Build Status](https://travis-ci.org/mafengwo/LegoForm.svg?branch=master)](https://travis-ci.org/mafengwo/LegoForm)
+
 ## 原理
 - 这是一个自动的数据管理维护界面生成工具，主要由js完成，通过他可以对固定模型的数据进行管理维护，并可以灵活的控制界面呈现
 - js通过读取配置生成界面和表单，并管理维护数据
