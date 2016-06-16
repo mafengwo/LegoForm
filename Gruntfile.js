@@ -59,15 +59,19 @@ module.exports = function (grunt) {
                     filter: 'isFile'
                 }]
             }
+        },
+        clean: {
+            js: ['src/lego/**/*.html.js']
         }
         
     });
 
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-copy');
+    grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-html2js');
 
-    grunt.registerTask('default', ['html2js', 'build', 'concat', 'copy']);
+    grunt.registerTask('default', ['html2js', 'build', 'concat', 'copy', 'clean']);
 
     grunt.registerTask('build', 'Build LegoForm module.', function () {
 
