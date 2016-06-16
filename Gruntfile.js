@@ -49,6 +49,15 @@ module.exports = function (grunt) {
                 dest: '<%= dist %>/<%= pkg.name %>-<%= pkg.version %>.js'
             }
         },
+        uglify: {
+            options: {
+                banner: '<%= meta.banner %>'
+            },
+            dist:{
+                src:['<%= concat.dist.dest %>'],
+                dest:'<%= dist %>/<%= pkg.name %>-<%= pkg.version %>.min.js'
+            }
+        },
         copy: {
             main: {
                 files: [{
@@ -67,11 +76,12 @@ module.exports = function (grunt) {
     });
 
     grunt.loadNpmTasks('grunt-contrib-concat');
+    grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-clean');
     grunt.loadNpmTasks('grunt-html2js');
 
-    grunt.registerTask('default', ['html2js', 'build', 'concat', 'copy', 'clean']);
+    grunt.registerTask('default', ['html2js', 'build', 'concat', 'uglify', 'copy', 'clean']);
 
     grunt.registerTask('build', 'Build LegoForm module.', function () {
 
