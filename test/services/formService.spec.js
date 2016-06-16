@@ -27,7 +27,8 @@ describe("Unit test: FormService", function () {
 
     var formService, modelService;
 
-    beforeEach(module('LegoForm'));
+    beforeEach(module('lf.service.model'));
+    beforeEach(module('lf.service.form'));
 
     beforeEach(inject(function ($injector) {
 
