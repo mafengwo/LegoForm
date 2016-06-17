@@ -1,12 +1,51 @@
 <!DOCTYPE html>
-<html lang="en">
+<html ng-app="app" lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Passenger Form</title>
+    <script src="angular.min.js"></script>
+    <script src="LegoForm-0.0.1.js"></script>
 </head>
-<body>
+<body ng-controller="PassengerController">
 
-    This is LegoForm's DEMO page, but now is under construction :)
 
+<lego-form lego-def="legoDef" ng-model="passenger"></lego-form>
+
+<script>
+
+    angular.module('app', ['LegoForm'])
+            .controller('PassengerController', ['$scope', '$interval', function ($scope, $interval) {
+
+                
+                $scope.passenger = {
+                    gender: 0,
+                    cabin_favor: [1, 2]
+                };
+
+
+                $scope.legoDef = [
+                    {
+                        name: 'gender',
+                        label: 'Gender',
+                        type: 'radio',
+                        options: [
+                            {value: 0, label: 'Male'},
+                            {value: 1, label: 'Female'}
+                        ]
+                    },
+                    {
+                        name: 'cabin_favor',
+                        label: 'Cabin Favor',
+                        type: 'checkbox',
+                        options: [
+                            {value: 0, label: 'Chinese Food'},
+                            {value: 1, label: 'Italy Food'},
+                            {value: 2, label: 'French Food'}
+                        ]
+                    }
+                ];
+
+            }]);
+</script>
 </body>
 </html>
