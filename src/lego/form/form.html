@@ -1,8 +1,20 @@
 <form class="form">
     
-    <div ng-repeat="lego in legoDef" ng-switch on="lego.type" class="form-group">
+    <div ng-repeat="lego in legoDef" ng-switch="lego.type" class="form-group">
+
+        <label ng-bind="lego.label"></label>
         
-        <lego-radio ng-model="" ng-switch-when="lego.type === 'radio'"></lego-radio>
-        <lego-checkbox ng-model="" ng-switch-when="lego.type === 'checkbox'"></lego-checkbox>
+        <lego-radio 
+                ng-model="ngModel[lego.name]" 
+                radio-options="lego.options" 
+                ng-switch-when="radio">
+        </lego-radio>
+        
+        <lego-checkbox 
+                ng-model="ngModel[lego.name]" 
+                checkbox-options="lego.options" 
+                ng-switch-when="checkbox">
+        </lego-checkbox>
     </div>
+    
 </form>
