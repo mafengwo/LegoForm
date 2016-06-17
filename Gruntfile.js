@@ -71,6 +71,11 @@ module.exports = function (grunt) {
         },
         clean: {
             js: ['src/lego/**/*.html.js']
+        },
+        
+        watch: {
+            files: ['src/**/*', '!src/**/*.html.js'],
+            tasks: ['default']
         }
         
     });
@@ -79,6 +84,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-copy');
     grunt.loadNpmTasks('grunt-contrib-clean');
+    grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-html2js');
 
     grunt.registerTask('default', ['html2js', 'build', 'concat', 'uglify', 'copy', 'clean']);
