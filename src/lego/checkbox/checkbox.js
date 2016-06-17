@@ -20,7 +20,7 @@ angular.module('lf.lego.checkbox', [])
             }
             
             if (!angular.isArray(ngModelCtrl.$modelValue)) {
-                throw TypeError('Type of model of lego-checkbox must be an array.');
+                throw TypeError('The data type of lego-checkbox must be an array.');
             }
             var $modelValue = ngModelCtrl.$modelValue,
                 index = $modelValue.indexOf(one.value);
@@ -36,7 +36,7 @@ angular.module('lf.lego.checkbox', [])
         $scope.isChecked = function (one) {
 
             if (!angular.isArray(ngModelCtrl.$modelValue)) {
-                throw TypeError('Type of model of lego-checkbox must be an array.');
+                throw TypeError('The data type of lego-checkbox must be an array.');
             }
 
             return ngModelCtrl.$modelValue.indexOf(one.value) !== -1;
