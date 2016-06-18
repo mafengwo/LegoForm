@@ -3,10 +3,6 @@ angular.module('lf.lego.form', [])
 
         var ngModelCtrl;
 
-        // $scope.formData = {
-        //     foo: 1
-        // };
-
         this.init = function (_ngModelCtrl) {
             ngModelCtrl = _ngModelCtrl;
         };
