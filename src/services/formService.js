@@ -2,7 +2,7 @@
  * Form Service 
  */
 angular.module('lf.service.form', [])
-    .service('formService', ['modelService', function (modelService) {
+    .service('formService', ['modelService', 'validationService', function (modelService, validationService) {
 
         var _TYPE_DEF = {
             STRING: 0,
@@ -57,6 +57,10 @@ angular.module('lf.service.form', [])
 
         this.getForm = function () {
             return _form;
+        };
+        
+        this.validate = function() {
+            validationService.validate();
         };
 
         var _fillFormWithDefaultValue = function () {
