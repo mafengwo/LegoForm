@@ -96,7 +96,7 @@ module.exports = function (grunt) {
         // Process
         grunt.file.expand('src/services/*.js').forEach(function (dir) {
             srcFiles.push(dir);
-            modules.push(`"lf.service.${dir.split('/')[2].replace('Service.js', '')}"`);
+            modules.push(`"lf.service.${dir.split('/')[2].replace('.js', '')}"`);
         });
 
         grunt.file.expand({filter: 'isDirectory', cwd: '.'}, ['src/lego/*']).forEach(function (dir) {
