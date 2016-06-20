@@ -8,23 +8,23 @@ angular.module('lf.lego.submit', [])
         };
 
         $scope.submit = function () {
-            
-            var validationResult = formService.validate()
-        }
+
+            formService.submit(ngModelCtrl.$modelValue);
+        };
 
     }])
     .directive('legoSubmit', function () {
         return {
             require: ['legoSubmit', 'ngModel'],
-            restrict: 'A',
-            scope: {},
-            controller: 'FormController',
+            restrict: 'E',
+            controller: 'SubmitController',
+            templateUrl: 'lf/submit.html',
             link: function (scope, elem, attrs, ctrls) {
 
-                var formCtrl = ctrls[0],
+                var submitCtrl = ctrls[0],
                     ngModelCtrl = ctrls[1];
 
-                formCtrl.init(ngModelCtrl);
+                submitCtrl.init(ngModelCtrl);
             }
         }
     });

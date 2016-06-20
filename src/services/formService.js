@@ -2,7 +2,7 @@
  * Form Service 
  */
 angular.module('lf.service.form', [])
-    .service('formService', ['modelService', 'validationService', function (modelService, validationService) {
+    .service('formService', ['modelService', 'validationService', '$rootScope', function (modelService, validationService, $rootScope) {
 
         var _TYPE_DEF = {
             STRING: 0,
@@ -58,9 +58,13 @@ angular.module('lf.service.form', [])
         this.getForm = function () {
             return _form;
         };
-        
-        this.validate = function() {
+
+        this.validate = function () {
             validationService.validate();
+        };
+
+        this.submit = function (data) {
+            $rootScope.$broadcast('lf.event.submit', data);
         };
 
         var _fillFormWithDefaultValue = function () {
@@ -93,17 +97,17 @@ angular.module('lf.service.form', [])
                                     break;
 
                                 case _TYPE_DEF.NUMBER:
-                                    defaultValue = schema['column_default_value'] 
+                                    defaultValue = schema['column_default_value']
                                         ? schema['column_default_value'] * 1 : 0;
                                     break;
 
                                 case _TYPE_DEF.ARRAY:
-                                    defaultValue = schema['column_default_value'] 
+                                    defaultValue = schema['column_default_value']
                                         ? JSON.parse(schema['column_default_value']) : [];
                                     break;
 
                                 case _TYPE_DEF.OBJECT:
-                                    defaultValue = schema['column_default_value'] 
+                                    defaultValue = schema['column_default_value']
                                         ? JSON.parse(schema['column_default_value']) : {};
                                     break;
 

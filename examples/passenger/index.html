@@ -44,6 +44,10 @@
                         ]
                     }
                 ];
+                
+                $scope.$on('lf.event.submit', function(data) {
+                    console.log(arguments);
+                })
 
             }]);
 </script>

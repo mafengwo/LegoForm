@@ -7,6 +7,7 @@ angular.module('lf.lego.form', [])
             ngModelCtrl = _ngModelCtrl;
         };
         
+        
     }])
     .directive('legoForm', function () {
         return {
