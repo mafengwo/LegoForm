@@ -8,8 +8,6 @@ angular.module('lf.service.model', [])
          * @private
          */
         var _modelDef = {};
-
-
         /**
          * Model column definition, indexed by lego name.
          * @type {Object}
