@@ -25,6 +25,13 @@
                 checkbox-options="lego.options"
                 max-length="lego.max_length"
         ></lego-checkbox>
+        
+        <!-- textarea -->
+        <lego-textarea
+                ng-switch-when="textarea"
+                ng-model="ngModel[lego.name]"
+                max-length="lego.max_length"
+        ></lego-textarea>
     </div>
 
     <lego-submit ng-model="ngModel"></lego-submit>
