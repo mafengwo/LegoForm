@@ -7,15 +7,15 @@ angular.module('lf.service.validation', [])
 
             angular.forEach(legoDef, function (lego) {
 
-                var data = formData[lego.name];
+                var data = formData[lego.name], dataType = lego.data_type.toLowerCase();
                 angular.forEach(lego, function (v, k) {
 
                     if (validator.hasOwnProperty(k)) {
 
-                        validationPassed = validator[k].method(data, v, lego);
+                        validationPassed = validator[k].method(data, v, dataType);
 
                         if (!validationPassed) {
-                            
+
                             validationErrors.push({
                                 lego_name: lego.name,
                                 message: errorMessage(validator[k].message, v, lego)
@@ -32,29 +32,29 @@ angular.module('lf.service.validation', [])
 
             data_type: {
 
-                method: function (data, param) {
+                method: function (data, dataType) {
 
                     var funcName;
-                    param = param.toLowerCase();
-                    if (-1 !== ['string', 'number', 'array', 'object'].indexOf(param)) {
-                        funcName = ['is', param.charAt(0).toUpperCase(), param.slice(1)].join('');
+                    dataType = dataType.toLowerCase();
+                    if (-1 !== ['string', 'number', 'array', 'object'].indexOf(dataType)) {
+                        funcName = ['is', dataType.charAt(0).toUpperCase(), dataType.slice(1)].join('');
                         return angular[funcName](data);
                     } else {
                         throw Error('Unrecognized data_type of' + param);
                     }
                 },
-                message: 'type is {PARAM}.'
+                message: 'type should be {PARAM}'
             },
 
             required: {
 
-                method: function (data, param, lego) {
+                method: function (data, param, dataType) {
 
-                    switch (lego['data_type'].toLowerCase()) {
+                    switch (dataType.toLowerCase()) {
                         case 'string':
                             return !!data.length;
                         case 'number':
-                            return !!data > 0;
+                            return data > 0;
                         case 'array':
                             return !!data.length;
                         case 'object':
@@ -71,13 +71,14 @@ angular.module('lf.service.validation', [])
 
             min_length: {
 
-                method: function (data, param, lego) {
+                method: function (data, minLength, dataType) {
 
-                    switch (lego['data_type'].toLowerCase() && angular.isNumber(param)) {
-                        case 'string':
-                            return data.length > param;
-                        case 'array':
-                            return data.length > param;
+                    if (-1 !== ['string', 'array'].indexOf(dataType)
+                        && angular.isNumber(+minLength)) {
+                        
+                        return data.length >= minLength;
+                    } else {
+                        return true;
                     }
                 },
                 message: 'min length is {PARAM}'
@@ -85,13 +86,14 @@ angular.module('lf.service.validation', [])
 
             max_length: {
 
-                method: function (data, param, lego) {
+                method: function (data, maxLength, dataType) {
 
-                    switch (lego['data_type'].toLowerCase() && angular.isNumber(param)) {
-                        case 'string':
-                            return data.length < param;
-                        case 'array':
-                            return data.length < param;
+                    if (-1 !== ['string', 'array'].indexOf(dataType)
+                        && angular.isNumber(+maxLength)) {
+
+                        return data.length <= maxLength;
+                    } else {
+                        return true;
                     }
                 },
                 message: 'max length is {PARAM}'
@@ -99,11 +101,11 @@ angular.module('lf.service.validation', [])
 
             range: {
 
-                method: function (data, param, lego) {
+                method: function (data, range, dataType) {
 
-                    if (lego.data_type.toLowerCase() === 'number' && angular.isArray(param) && param.length === 2
-                        && angular.isNumber(param[0]) && angular.isNumber(param[1]) && param[0] <= param[1]) {
-                        return param[0] < data && data < param[1];
+                    if (dataType === 'number' && angular.isArray(range) && range.length === 2
+                        && angular.isNumber(range[0]) && angular.isNumber(range[1]) && range[0] <= range[1]) {
+                        return range[0] < data && data < range[1];
                     }
                 },
                 message: 'value range is {PARAM[0]} - {PARAM[1]}'
