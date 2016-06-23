@@ -5,6 +5,8 @@ angular.module('lf.lego.form', [])
 
         this.init = function (_ngModelCtrl) {
             ngModelCtrl = _ngModelCtrl;
+            
+            formService.init(_ngModelCtrl.legoDef, ngModelCtrl.legoDef);
         };
         
         

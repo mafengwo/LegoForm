@@ -2,124 +2,58 @@
  * Form Service 
  */
 angular.module('lf.service.form', [])
-    .service('formService', ['modelService', 'validationService', '$rootScope', function (modelService, validationService, $rootScope) {
+    .service('formService', ['validationService', '$rootScope', function (validationService, $rootScope) {
 
-        var _TYPE_DEF = {
-            STRING: 0,
-            NUMBER: 1,
-            ARRAY: 2,
-            OBJECT: 3
-        };
-
-        var _form = [];
-        /**
-         *
-         * @type {Object}
-         * @private
-         */
-        var _formDef = [];
+        var _formData = {};
 
         var _legoDef = [];
 
-        var _helperMapping = {};
+        this.getLegoDef = function () {
 
-        var _isSaved = false;
+            return this._legoDef;
+        };
 
-        this.initFormDef = function (formDef) {
+        this.getFormData = function () {
 
+            return this._formData;
+        };
 
-            _formDef.length = 0;
-            _legoDef.length = 0;
+        this.init = function (legoDef, formData) {
 
-            Array.prototype.push.apply(_formDef, formDef);
+            this._legoDef = legoDef;
 
-            _.each(_formDef, function (form, k) {
-
-                _legoDef = _legoDef.concat(form['lego']);
-
-                _.each(form['lego'], function (lego, kk) {
-                    _helperMapping[lego.name] = [k, kk];
-                });
+            angular.forEach(legoDef, function (lego) {
+                if (!formData.hasOwnProperty(lego.name)) {
+                    formData[lego.name] = generateDefault(lego);
+                }
             });
-
-            if (!_isSaved) {
-                _fillFormWithDefaultValue();
-            }
-        };
-
-        this.isSaved = function () {
-            return _isSaved;
-        };
-
-        this.setSaved = function (bool) {
-            _isSaved = bool;
-        };
-
-        this.getForm = function () {
-            return _form;
+            this._formData = formData;
         };
 
         this.validate = function () {
             validationService.validate();
         };
 
-        this.submit = function (data) {
-            $rootScope.$broadcast('lf.event.submit', data);
+        this.submit = function () {
+            $rootScope.$broadcast('lf.event.submit', this.getForm());
         };
 
-        var _fillFormWithDefaultValue = function () {
-
-            _.each(_formDef, function (f, k) {
-
-                if (k >= _form.length) {
-                    _form.push({});
+        function generateDefault(lego) {
+            var dataType = lego.data_type.toLowerCase(),
+                defaultValue = lego.default_value;
+            
+            if(defaultValue) {
+                return defaultValue;
+            } else {
+                switch (dataType) {
+                    case 'string': return '';
+                    case 'number': return 0;
+                    case 'array': return [];
+                    case 'object': return {};
                 }
-
-                _.each(f.lego, function (lego) {
-
-                    var modelId = lego.name.split('$$')[2];
-
-                    if (modelService.getModelById(modelId).relationship === 1) {
-
-                        var formIndex = _helperMapping[lego.name][0];
-                        _form[formIndex][lego.name] = [];
-
-                    } else {
-
-                        if (!_.has(_form[k], lego.name)) {
-
-                            var schema = modelService.getSchemaByLegoName(lego.name), defaultValue;
-
-                            switch (schema['column_data_type']) {
-
-                                case _TYPE_DEF.STRING:
-                                    defaultValue = schema['column_default_value'] || '';
-                                    break;
-
-                                case _TYPE_DEF.NUMBER:
-                                    defaultValue = schema['column_default_value']
-                                        ? schema['column_default_value'] * 1 : 0;
-                                    break;
-
-                                case _TYPE_DEF.ARRAY:
-                                    defaultValue = schema['column_default_value']
-                                        ? JSON.parse(schema['column_default_value']) : [];
-                                    break;
-
-                                case _TYPE_DEF.OBJECT:
-                                    defaultValue = schema['column_default_value']
-                                        ? JSON.parse(schema['column_default_value']) : {};
-                                    break;
-
-                                default:
-                                    defaultValue = ''
-                            }
-
-                            _form[k][lego.name] = defaultValue;
-                        }
-                    }
-                });
-            });
+            }
+                
+            
         }
 
     }]);
