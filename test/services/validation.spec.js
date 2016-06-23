@@ -53,7 +53,6 @@ describe("Unit test: ValidationService", function () {
 
     it('validation should return array with specified length', function () {
         
-        console.log(validateResult);
         validateResult.should.be.a('array');
         validateResult.should.have.lengthOf(13);
     });
