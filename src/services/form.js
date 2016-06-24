@@ -4,34 +4,34 @@
 angular.module('lf.service.form', [])
     .service('formService', ['validationService', '$rootScope', function (validationService, $rootScope) {
 
-        var _formData = {};
+        var formData = {};
 
-        var _legoDef = [];
+        var legoDef = [];
 
         this.getLegoDef = function () {
 
-            return this._legoDef;
+            return this.legoDef;
         };
 
         this.getFormData = function () {
 
-            return this._formData;
+            return this.formData;
         };
 
         this.init = function (legoDef, formData) {
 
-            this._legoDef = legoDef;
+            this.legoDef = legoDef;
 
             angular.forEach(legoDef, function (lego) {
                 if (!formData.hasOwnProperty(lego.name)) {
                     formData[lego.name] = generateDefault(lego);
                 }
             });
-            this._formData = formData;
+            this.formData = formData;
         };
 
         this.validate = function () {
-            validationService.validate();
+            validationService.validate(legoDef, formData);
         };
 
         this.submit = function () {
