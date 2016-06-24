@@ -2,17 +2,19 @@
  * Created by mafengwo on 16/5/30.
  */
 
-var express = require('express');
-var app = new express();
-var port = 3000;
+var express = require('express'),
+    app = new express(), port = 3000,
+    api = require('./api/index');
 
 
-app.get("/", function(req, res) {
+app.get("/", function (req, res) {
     res.sendFile(__dirname + '/index.html')
 });
 app.use(express.static('public/'));
 
-app.listen(port, function(error) {
+api.routeConfig(app);
+
+app.listen(port, function (error) {
     if (error) {
         console.error(error)
     } else {

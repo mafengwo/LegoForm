@@ -3,51 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <title>Passenger Form</title>
+    <link rel="stylesheet" href="bootstrap.css">
     <script src="angular.min.js"></script>
     <script src="LegoForm-0.0.1.js"></script>
 </head>
-<body ng-controller="PassengerController">
+<body ng-controller="PassengerController" style="margin: 20px;">
 
 
-<lego-form lego-def="legoDef" ng-model="passenger"></lego-form>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">Passenger's Form</h3>
+    </div>
+    <div class="panel-body">
+        <lego-form lego-def="config.legoDef" ng-model="config.passenger"></lego-form>
+
+    </div>
+</div>
 
 <script>
 
     angular.module('app', ['LegoForm'])
-            .controller('PassengerController', ['$scope', '$interval', function ($scope, $interval) {
+            .controller('PassengerController', ['$scope', '$http', function ($scope, $http) {
 
-                
-                $scope.passenger = {
-                    gender: 0,
-                    cabin_favor: [1, 2]
+
+                $scope.config = {
+                    legoDef: [], passenger: {}
                 };
+                $http.get('/api/legoDef').success(function (res) {
+                    $scope.config.legoDef = res;
+                });
 
+                $http.get('/api/formData').success(function (res) {
+                    $scope.config.passenger = res;
+                });
 
-                $scope.legoDef = [
-                    {
-                        name: 'gender',
-                        label: 'Gender',
-                        type: 'radio',
-                        options: [
-                            {value: 0, label: 'Male'},
-                            {value: 1, label: 'Female'}
-                        ]
-                    },
-                    {
-                        name: 'cabin_favor',
-                        label: 'Cabin Favor',
-                        type: 'checkbox',
-                        options: [
-                            {value: 0, label: 'Chinese Food'},
-                            {value: 1, label: 'Italy Food'},
-                            {value: 2, label: 'French Food'}
-                        ]
-                    }
-                ];
-                
-                $scope.$on('lf.event.submit', function(data) {
+                $scope.$on('lf.event.submit', function (data) {
                     console.log(arguments);
-                })
+                });
 
             }]);
 </script>

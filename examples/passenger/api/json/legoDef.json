@@ -1,0 +1,26 @@
+[
+  {
+    "name": "name",
+    "data_type": "string",
+    "type": "input",
+    "label": "Name",
+    "required": true
+  },
+  {
+    "name": "gender",
+    "data_type": "number",
+    "type": "radio",
+    "label": "Gender",
+    "required": true,
+    "options": [
+      {
+        "label": "Male",
+        "value": 0
+      },
+      {
+        "label": "Female",
+        "value": 1
+      }
+    ]
+  }
+]
