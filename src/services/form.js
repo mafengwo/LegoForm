@@ -4,9 +4,7 @@
 angular.module('lf.service.form', [])
     .service('formService', ['validationService', '$rootScope', function (validationService, $rootScope) {
 
-        var formData = {};
-
-        var legoDef = [];
+        var formData = {}, legoDef = [];
 
         this.getLegoDef = function () {
 
@@ -35,7 +33,7 @@ angular.module('lf.service.form', [])
         };
 
         this.submit = function () {
-            $rootScope.$broadcast('lf.event.submit', this.getForm());
+            $rootScope.$broadcast('lf.event.submit');
         };
 
         function generateDefault(lego) {
