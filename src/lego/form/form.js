@@ -1,15 +1,25 @@
 angular.module('lf.lego.form', [])
-    .controller('FormController', ['$scope', 'formService', function($scope, formService) {
+    .controller('FormController', ['$scope', 'formService', function ($scope, formService) {
 
-        var ngModelCtrl;
+        var legoDef, ngModel;
 
-        this.init = function (_ngModelCtrl) {
-            ngModelCtrl = _ngModelCtrl;
-            
-            formService.init(_ngModelCtrl.legoDef, ngModelCtrl.legoDef);
+        this.setLegoDef = function (_legoDef) {
+            legoDef = _legoDef;
+            this.init();
         };
-        
-        
+
+        this.setNgModel = function (_ngModel) {
+            ngModel = _ngModel;
+            this.init();
+        };
+
+        this.init = function () {
+            if (legoDef && ngModel) {
+                formService.init(legoDef, ngModel);
+            }
+        };
+
+
     }])
     .directive('legoForm', function () {
         return {
@@ -24,9 +34,21 @@ angular.module('lf.lego.form', [])
             link: function (scope, elem, attrs, ctrls) {
 
                 var formCtrl = ctrls[0],
-                    ngModelCtrl = ctrls[1];
+                    unRegisterLegoDef, unRegisterNgModel;
 
-                formCtrl.init(ngModelCtrl);
+                unRegisterLegoDef = scope.$watch('legoDef', function (nv) {
+                    if (nv && angular.isArray(nv) && nv.length > 0) {
+                        formCtrl.setLegoDef(nv);
+                        unRegisterLegoDef();
+                    }
+                });
+
+                unRegisterNgModel = scope.$watch('ngModel', function (nv) {
+                    if (nv) {
+                        formCtrl.setNgModel(nv);
+                        unRegisterNgModel();
+                    }
+                });
             }
         }
     });
