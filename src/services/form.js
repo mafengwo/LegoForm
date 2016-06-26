@@ -8,24 +8,24 @@ angular.module('lf.service.form', [])
 
         this.getLegoDef = function () {
 
-            return this.legoDef;
+            return legoDef;
         };
 
         this.getFormData = function () {
 
-            return this.formData;
+            return formData;
         };
 
-        this.init = function (legoDef, formData) {
+        this.init = function (_legoDef, _formData) {
 
-            this.legoDef = legoDef;
+            legoDef = _legoDef;
 
-            angular.forEach(legoDef, function (lego) {
-                if (!formData.hasOwnProperty(lego.name)) {
-                    formData[lego.name] = generateDefault(lego);
+            angular.forEach(_legoDef, function (lego) {
+                if (!_formData.hasOwnProperty(lego.name)) {
+                    _formData[lego.name] = generateDefault(lego);
                 }
             });
-            this.formData = formData;
+            formData = _formData;
         };
 
         this.validate = function () {
@@ -33,7 +33,7 @@ angular.module('lf.service.form', [])
         };
 
         this.submit = function () {
-            $rootScope.$broadcast('lf.event.submit');
+            $rootScope.$broadcast('lf.event.submit', formData);
         };
 
         function generateDefault(lego) {
