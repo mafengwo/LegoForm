@@ -9,7 +9,7 @@ angular.module('lf.lego.submit', [])
 
         $scope.submit = function () {
 
-            formService.submit(ngModelCtrl.$modelValue);
+            formService.submit();
         };
 
     }])
