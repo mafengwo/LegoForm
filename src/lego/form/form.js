@@ -33,20 +33,17 @@ angular.module('lf.lego.form', [])
             controller: 'FormController',
             link: function (scope, elem, attrs, ctrls) {
 
-                var formCtrl = ctrls[0],
-                    unRegisterLegoDef, unRegisterNgModel;
+                var formCtrl = ctrls[0];
 
-                unRegisterLegoDef = scope.$watch('legoDef', function (nv) {
+                scope.$watch('legoDef', function (nv) {
                     if (nv && angular.isArray(nv) && nv.length > 0) {
                         formCtrl.setLegoDef(nv);
-                        unRegisterLegoDef();
                     }
                 });
 
-                unRegisterNgModel = scope.$watch('ngModel', function (nv) {
+                scope.$watch('ngModel', function (nv) {
                     if (nv) {
                         formCtrl.setNgModel(nv);
-                        unRegisterNgModel();
                     }
                 });
             }
