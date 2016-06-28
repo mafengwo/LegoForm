@@ -57,10 +57,10 @@ angular.module('lf.lego.checkbox', [])
             controller: 'CheckboxController',
             link: function (scope, elem, attrs, ctrls) {
 
-                var radioCtrl = ctrls[0],
+                var checkboxCtrl = ctrls[0],
                     ngModelCtrl = ctrls[1];
 
-                radioCtrl.init(ngModelCtrl);
+                checkboxCtrl.init(ngModelCtrl);
 
             }
         }
