@@ -54,7 +54,7 @@ angular.module('lf.service.validation', [])
                         case 'string':
                             return !!data.length;
                         case 'number':
-                            return data > 0;
+                            return !isNaN(parseFloat(data)) && isFinite(data);
                         case 'array':
                             return !!data.length;
                         case 'object':
