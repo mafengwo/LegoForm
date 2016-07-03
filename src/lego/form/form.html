@@ -23,6 +23,13 @@
                 ng-model="ngModel[lego.name]"
         ></lego-checkbox>
         
+        <!-- select -->
+        <lego-select
+                ng-switch-when="select"
+                lego = "lego"
+                ng-model="ngModel[lego.name]"
+        ></lego-select>
+        
         <!-- textarea -->
         <lego-textarea
                 ng-switch-when="textarea"
