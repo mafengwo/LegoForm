@@ -18,6 +18,7 @@ angular.module('lf.service.validation', [])
 
                             validationErrors.push({
                                 lego_name: lego.name,
+                                lego_type: lego.type,
                                 message: errorMessage(validator[k].message, v, lego)
                             });
                         }
@@ -75,7 +76,7 @@ angular.module('lf.service.validation', [])
 
                     if (-1 !== ['string', 'array'].indexOf(dataType)
                         && angular.isNumber(+minLength)) {
-                        
+
                         return data.length >= minLength;
                     } else {
                         return true;
@@ -128,6 +129,6 @@ angular.module('lf.service.validation', [])
                 message = message.replace('{PARAM}', param);
             }
 
-            return ['[LegoValidationError] Lego (', lego.name, ') ', message].join('');
+            return [lego.label, ' ', message].join('');
         }
     });

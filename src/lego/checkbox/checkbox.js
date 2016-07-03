@@ -3,16 +3,16 @@ angular.module('lf.lego.checkbox', [])
 
         var ngModelCtrl;
 
-        if (!$scope.checkboxOptions) {
-            $scope.checkboxOptions = {};
-        }
-
         this.init = function (_ngModelCtrl) {
 
             ngModelCtrl = _ngModelCtrl;
         };
 
+        $scope.$on('lf.event.validation.checkbox', function(event, data) {
 
+            $scope.validationError = data;
+        });
+        
         $scope.check = function (one, $event) {
 
             if ($event.target.tagName !== 'INPUT') {
@@ -51,7 +51,7 @@ angular.module('lf.lego.checkbox', [])
             require: ['legoCheckbox', 'ngModel'],
             restrict: 'E',
             scope: {
-                checkboxOptions: '=?'
+                lego: '='
             },
             templateUrl: 'lf/checkbox.html',
             controller: 'CheckboxController',

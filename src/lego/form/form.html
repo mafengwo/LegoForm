@@ -2,35 +2,32 @@
 
     <div ng-repeat="lego in legoDef" ng-switch="lego.type" class="form-group">
 
-        <label ng-bind="lego.label"></label>
-
         <!-- input -->
-        <lego-input 
+        <lego-input
                 ng-switch-when="input"
+                lego = "lego"
                 ng-model="ngModel[lego.name]"
-                max-length="lego.max_length"
         ></lego-input>
 
         <!-- radio -->
         <lego-radio
                 ng-switch-when="radio"
+                lego = "lego"
                 ng-model="ngModel[lego.name]"
-                radio-options="lego.options"
         ></lego-radio>
 
         <!-- checkbox -->
         <lego-checkbox
                 ng-switch-when="checkbox"
+                lego = "lego"
                 ng-model="ngModel[lego.name]"
-                checkbox-options="lego.options"
-                max-length="lego.max_length"
         ></lego-checkbox>
         
         <!-- textarea -->
         <lego-textarea
                 ng-switch-when="textarea"
+                lego = "lego"
                 ng-model="ngModel[lego.name]"
-                max-length="lego.max_length"
         ></lego-textarea>
     </div>
 

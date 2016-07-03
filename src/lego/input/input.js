@@ -1,5 +1,5 @@
 angular.module('lf.lego.input', [])
-    .controller('InputController', function () {
+    .controller('InputController', ['$scope', function ($scope) {
 
         var ngModelCtrl;
 
@@ -7,14 +7,18 @@ angular.module('lf.lego.input', [])
             ngModelCtrl = _ngModelCtrl;
         };
 
-    })
+        $scope.$on('lf.event.validation.input', function(event, data) {
+            
+            $scope.validationError = data;
+        });
+    }])
     .directive('legoInput', function () {
         return {
             require: ['legoInput', 'ngModel'],
             restrict: 'E',
             scope: {
-                maxLength: '=?',
-                ngModel: '=?'
+                ngModel: '=',
+                lego: '='
             },
             templateUrl: 'lf/input.html',
             controller: 'InputController',

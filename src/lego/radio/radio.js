@@ -6,10 +6,6 @@ angular.module('lf.lego.radio', [])
 
         var ngModelCtrl;
 
-        if (!$scope.radioOptions) {
-            $scope.radioOptions = {};
-        }
-
         this.init = function (_ngModelCtrl) {
 
             ngModelCtrl = _ngModelCtrl;
@@ -20,10 +16,10 @@ angular.module('lf.lego.radio', [])
             if ($event.target.tagName !== 'INPUT') {
                 return false;
             }
-            
+
             ngModelCtrl.$setViewValue(one.value);
         };
-        
+
         $scope.isChecked = function (one) {
             return ngModelCtrl.$modelValue === one.value;
         }
@@ -33,7 +29,7 @@ angular.module('lf.lego.radio', [])
             require: ['legoRadio', 'ngModel'],
             restrict: 'E',
             scope: {
-                radioOptions: '=?'
+                lego: '=?'
             },
             templateUrl: 'lf/radio.html',
             controller: 'RadioController',
