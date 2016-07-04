@@ -22,5 +22,47 @@
         "value": 1
       }
     ]
+  },
+  {
+    "name": "cities",
+    "data_type": "array",
+    "type": "checkbox",
+    "label": "Visit Cities",
+    "required": true,
+    "options": [
+      {
+        "label": "Seattle",
+        "value": "SEA"
+      },
+      {
+        "label": "New York",
+        "value": "NY"
+      },
+      {
+        "label": "Los Angeles",
+        "value": "LA"
+      }
+    ]
+  },
+  {
+    "name": "from",
+    "data_type": "string",
+    "type": "select",
+    "label": "Come From",
+    "required": true,
+    "options": [
+      {
+        "label": "England",
+        "value": "EN"
+      },
+      {
+        "label": "China",
+        "value": "CN"
+      },
+      {
+        "label": "Russia",
+        "value": "RS"
+      }
+    ]
   }
 ]
