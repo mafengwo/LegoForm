@@ -2,31 +2,49 @@
 
 [![Build Status](https://travis-ci.org/mafengwo/LegoForm.svg?branch=master)](https://travis-ci.org/mafengwo/LegoForm)
 
-## 原理
-- 这是一个自动的数据管理维护界面生成工具，主要由js完成，通过他可以对固定模型的数据进行管理维护，并可以灵活的控制界面呈现
-- js通过读取配置生成界面和表单，并管理维护数据
+Legoform is a simple tool that makes it easy to build form in angular apps. 
+It designed to reduce the work of writing duplicated form elements in HTML and duplicated validation logic in controllers.
+Instead of writing duplicated elements in HTML, LegoForm uses a JSON-based Lego configuration as a form definition.
+##Usage:   
+**HTML:**
 
-## 数据源
-- 配置的数据源可以是静态配置，也可以是动态配置，静态配置需要手动修改配置文件，动态配置可以通过界面进行管理维护。
-- 模型的数据的数据源通常是动态配置才能进行持久化，静态配置只能用来演示
+```html
+<!-- Dependencies for LegoForm -->
+<link rel="stylesheet" href="bootstrap.css">
+<script src="angular.min.js"></script>
+  
+<!-- LegoForm -->
+<script src="LegoForm-0.0.1.js"></script>
+  
+...
+  
+<!-- Use LegoForm -->
+<lego-form lego-def="config.legoDef" ng-model="passenger"></lego-form>
+```
 
-## 模型
-- 每个模型都对应一个固定的结构，通常对应一个数据库的表
-- 模型包括下列属性：ID，名称，标示(比如：数据库的表名称)，字段列表
+**Javascript:**
+```javascript
+angular.module('app', ['LegoForm'])
+    .controller('PassengerController', ['$scope', '$http', function ($scope, $http) {
 
-## 字段
-- 字段包含下列属性：名称，类型，是否主键，默认值
+        $scope.config = {};
+        
+        $scope.passenger = {};
+  
+        /**
+        * Fetch Lego configuration
+        */
+        $http.get('/api/legoDef').success(function (res) {
+            $scope.config.legoDef = res;
+        });
+  
+        /**
+        * Sumbit event triggered.
+        */
+        $scope.$on('lf.event.submit', function (event, data) {
+            // Your submit logic goes here.
+        });
 
-## 模块
-- 模块是一组表的集合（也可以是一个表），其中一个是主表
-- 模块具有下列属性：ID，名称，表单集合
+    }]);
+```
 
-## 表单
-- 表单具有下列属性：名称，元素列表
-
-## 元素
-- 元素具有下列属性：模型ID，字段名称，名称，类型
-
-## 未来
-- 界面有多种样式可以选择
-- 支持各种数据项目的插件
