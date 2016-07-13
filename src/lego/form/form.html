@@ -1,42 +1,45 @@
 <form class="form">
+    <div class="row">
+        <div ng-repeat="lego in legoDef" ng-switch="lego.type" class="col-md-{{lego.style.width}}">
+            <div class="form-group">
 
-    <div ng-repeat="lego in legoDef" ng-switch="lego.type" class="form-group">
+                <!-- input -->
+                <lego-input
+                        ng-switch-when="input"
+                        lego="lego"
+                        ng-model="ngModel[lego.name]"
+                ></lego-input>
 
-        <!-- input -->
-        <lego-input
-                ng-switch-when="input"
-                lego = "lego"
-                ng-model="ngModel[lego.name]"
-        ></lego-input>
+                <!-- radio -->
+                <lego-radio
+                        ng-switch-when="radio"
+                        lego="lego"
+                        ng-model="ngModel[lego.name]"
+                ></lego-radio>
 
-        <!-- radio -->
-        <lego-radio
-                ng-switch-when="radio"
-                lego = "lego"
-                ng-model="ngModel[lego.name]"
-        ></lego-radio>
+                <!-- checkbox -->
+                <lego-checkbox
+                        ng-switch-when="checkbox"
+                        lego="lego"
+                        ng-model="ngModel[lego.name]"
+                ></lego-checkbox>
 
-        <!-- checkbox -->
-        <lego-checkbox
-                ng-switch-when="checkbox"
-                lego = "lego"
-                ng-model="ngModel[lego.name]"
-        ></lego-checkbox>
-        
-        <!-- select -->
-        <lego-select
-                ng-switch-when="select"
-                lego = "lego"
-                ng-model="ngModel[lego.name]"
-        ></lego-select>
-        
-        <!-- textarea -->
-        <lego-textarea
-                ng-switch-when="textarea"
-                lego = "lego"
-                ng-model="ngModel[lego.name]"
-        ></lego-textarea>
+                <!-- select -->
+                <lego-select
+                        ng-switch-when="select"
+                        lego="lego"
+                        ng-model="ngModel[lego.name]"
+                ></lego-select>
+
+                <!-- textarea -->
+                <lego-textarea
+                        ng-switch-when="textarea"
+                        lego="lego"
+                        ng-model="ngModel[lego.name]"
+                ></lego-textarea>
+
+            </div>
+        </div>
     </div>
-
     <lego-submit ng-model="ngModel"></lego-submit>
 </form>
