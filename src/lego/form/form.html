@@ -1,6 +1,7 @@
 <form class="form">
     <div class="row">
-        <div ng-repeat="lego in legoDef" ng-switch="lego.type" class="col-md-{{lego.style.width}}">
+        <div ng-repeat="lego in legoDef" ng-hide="lego.states.hide" class="col-md-{{lego.style.width}}"
+             ng-switch="lego.type">
             <div class="form-group">
 
                 <!-- input -->

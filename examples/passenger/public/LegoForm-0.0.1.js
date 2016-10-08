@@ -2,7 +2,7 @@
  * LegoForm
  * 
  *
- * Version: 0.0.1 - 2016-09-24
+ * Version: 0.0.1 - 2016-10-08
  * License: MIT
  */
 angular.module("LegoForm", ["lf.tpls", "lf.service.event","lf.service.form","lf.service.validation","lf.lego.checkbox","lf.lego.form","lf.lego.input","lf.lego.radio","lf.lego.select","lf.lego.submit","lf.lego.textarea"]);
@@ -555,7 +555,8 @@ angular.module("lf/form.html", []).run(["$templateCache", function($templateCach
   $templateCache.put("lf/form.html",
     "<form class=\"form\">\n" +
     "    <div class=\"row\">\n" +
-    "        <div ng-repeat=\"lego in legoDef\" ng-switch=\"lego.type\" class=\"col-md-{{lego.style.width}}\">\n" +
+    "        <div ng-repeat=\"lego in legoDef\" ng-hide=\"lego.states.hide\" class=\"col-md-{{lego.style.width}}\"\n" +
+    "             ng-switch=\"lego.type\">\n" +
     "            <div class=\"form-group\">\n" +
     "\n" +
     "                <!-- input -->\n" +

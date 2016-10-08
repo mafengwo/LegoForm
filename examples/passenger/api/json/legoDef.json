@@ -4,7 +4,20 @@
     "data_type": "string",
     "type": "input",
     "label": "Name",
-    "required": true
+    "required": true,
+    "states": {
+      "hide": true
+    }
+  },
+  {
+    "name": "name",
+    "data_type": "string",
+    "type": "input",
+    "label": "Name",
+    "required": true,
+    "states": {
+      "hide": false
+    }
   },
   {
     "name": "gender",
