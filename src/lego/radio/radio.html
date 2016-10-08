@@ -1,7 +1,7 @@
 <label ng-bind="lego.label"></label>
 <div class="lf-lego-radio">
     <label class="item" ng-repeat="one in lego.options" ng-click="check(one, $event)">
-        <input type="radio" ng-checked="isChecked(one)">
+        <input type="radio" ng-checked="isChecked(one)" ng-disabled="lego.states.disabled">
         <span class="label-text" ng-bind="one.label"></span>
     </label>
 </div>

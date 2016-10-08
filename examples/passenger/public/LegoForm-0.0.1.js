@@ -2,11 +2,33 @@
  * LegoForm
  * 
  *
- * Version: 0.0.1 - 2016-06-27
+ * Version: 0.0.1 - 2016-09-24
  * License: MIT
  */
-angular.module("LegoForm", ["lf.tpls", "lf.service.form","lf.service.model","lf.service.validation","lf.lego.checkbox","lf.lego.form","lf.lego.input","lf.lego.radio","lf.lego.submit","lf.lego.textarea"]);
-angular.module("lf.tpls", ["lf/checkbox.html","lf/form.html","lf/input.html","lf/radio.html","lf/submit.html","lf/textarea.html"]);
+angular.module("LegoForm", ["lf.tpls", "lf.service.event","lf.service.form","lf.service.validation","lf.lego.checkbox","lf.lego.form","lf.lego.input","lf.lego.radio","lf.lego.select","lf.lego.submit","lf.lego.textarea"]);
+angular.module("lf.tpls", ["lf/checkbox.html","lf/form.html","lf/input.html","lf/radio.html","lf/select.html","lf/submit.html","lf/textarea.html"]);
+angular.module('lf.service.event', []).service('eventService', function () {
+
+
+    var eventStore = {};
+
+    this.on = function (id, event, condition, handler) {
+
+        eventStore[id][event].condition = condition;
+        eventStore[id][event].handler = handler;
+    };
+
+    this.trigger = function (event) {
+        if (angular.isFunction(eventStore[event])) {
+            eventStore[event]();
+        }
+    };
+
+    this.unbind = function (event) {
+        delete eventStore[event];
+    };
+
+});
 /*
  * Form Service 
  */
@@ -38,162 +60,63 @@ angular.module('lf.service.form', [])
         };
 
         this.validate = function () {
-            validationService.validate(legoDef, formData);
+            return validationService.validate(legoDef, formData);
         };
 
         this.submit = function () {
-            $rootScope.$broadcast('lf.event.submit', formData);
+            var errors = this.validate();
+            if (!errors.length) {
+                $rootScope.$broadcast('lf.event.submit', formData);
+            } else {
+                broadcastValidationErrors(errors);
+            }
         };
 
+        function broadcastValidationErrors(errors) {
+            
+            var group = {};
+            
+            angular.forEach(errors, function (error) {
+                if (!angular.isDefined(group[error.lego_type])) {
+                    group[error.lego_type] = {};
+                }
+
+                if (!angular.isDefined(group[error.lego_type][error.lego_name])) {
+                    group[error.lego_type][error.lego_name] = [];
+                }
+                
+                group[error.lego_type][error.lego_name] = error.message;
+            });
+            
+            angular.forEach(group, function (errors, groupName) {
+                $rootScope.$broadcast('lf.event.validation.' + groupName, errors);
+            })
+        }
+
         function generateDefault(lego) {
+
             var dataType = lego.data_type.toLowerCase(),
                 defaultValue = lego.default_value;
-            
-            if(defaultValue) {
+
+            if (defaultValue) {
                 return defaultValue;
             } else {
                 switch (dataType) {
-                    case 'string': return '';
-                    case 'number': return 0;
-                    case 'array': return [];
-                    case 'object': return {};
+                    case 'string':
+                        return '';
+                    case 'number':
+                        return 0;
+                    case 'array':
+                        return [];
+                    case 'object':
+                        return {};
                 }
             }
-                
-            
+
+
         }
 
     }]);
-angular.module('lf.service.model', [])
-    .service('modelService', function () {
-
-
-        /**
-         * Model definition, indexed by model's id.
-         * @type {Object}
-         * @private
-         */
-        var _modelDef = {};
-        /**
-         * Model column definition, indexed by lego name.
-         * @type {Object}
-         * @private
-         */
-        var _helperMapping = {};
-
-        /**
-         * Primary model id.
-         * @type {Number}
-         * @private
-         */
-        var _primaryModelId;
-
-        /**
-         * Primary model's primary column's Lego name.
-         * @type {Number}
-         * @private
-         */
-        var _primaryLegoName;
-
-        /**
-         * Primary model's primary column's name.
-         * @type {Number}
-         * @private
-         */
-        var _primaryColumnName;
-
-
-        /**
-         * Initiate model service by adding
-         * model data and schema data into this function.
-         * @param {Array} models
-         * @param {Object} schemas
-         */
-        this.initModelDef = function (models, schemas) {
-
-            var model;
-            _modelDef = _.indexBy(models, 'id');
-
-            _.each(schemas, function (schema, modelId) {
-
-                model = _modelDef[modelId];
-
-                // recognize the primary model.
-                if (model.role === 1) {
-                    _primaryModelId = model.id;
-                }
-
-                _.each(schema, function (c) {
-
-                    // generate column's lego name
-                    var legoName = [model.kind, c.column, model.id, c.id].join('$$');
-
-                    _helperMapping[legoName] = {
-                        col_id: c.id,
-                        column: c.column,
-                        model_id: model.id,
-                        kind: model.kind,
-                        relationship: model.relationship,
-                        role: model.role,
-                        default_value: c['column_data_default_value'],
-                        data_type: c['column_data_type'],
-                        key_type: c['column_key_type'],
-                        one_with_more: model.relationship === 1
-                    };
-
-                    // recognize the primary column
-                    if (_primaryModelId === model.id && c['column_key_type'] == 1) {
-                        _primaryColumnName = c.column;
-                        _primaryLegoName = legoName;
-                    }
-                });
-            });
-
-        };
-
-        /**
-         * Get Model definition by id.
-         * @param modelId
-         * @returns {Object}
-         */
-        this.getModelById = function (modelId) {
-            return _modelDef[modelId];
-        };
-
-        /**
-         * Get primary model's id.
-         * @returns {Number|*}
-         */
-        this.getPrimaryModelId = function () {
-            return _primaryModelId;
-        };
-
-        /**
-         * Get primary model's primary column's lego name.
-         * @returns {string|*}
-         */
-        this.getPrimaryLegoName = function () {
-            return _primaryLegoName;
-        };
-
-        /**
-         * Get primary model's primary column's name.
-         * @returns {Number|*}
-         */
-        this.getPrimaryColumnName = function () {
-            return _primaryColumnName;
-        };
-
-        /**
-         * Get schema info by lego name.
-         * @param legoName
-         * @returns {object}
-         */
-        this.getSchemaByLegoName = function (legoName) {
-
-            return _helperMapping[legoName];
-        };
-    });        
 angular.module('lf.service.validation', [])
     .service('validationService', function () {
 
@@ -214,6 +137,7 @@ angular.module('lf.service.validation', [])
 
                             validationErrors.push({
                                 lego_name: lego.name,
+                                lego_type: lego.type,
                                 message: errorMessage(validator[k].message, v, lego)
                             });
                         }
@@ -250,7 +174,7 @@ angular.module('lf.service.validation', [])
                         case 'string':
                             return !!data.length;
                         case 'number':
-                            return data > 0;
+                            return !isNaN(parseFloat(data)) && isFinite(data);
                         case 'array':
                             return !!data.length;
                         case 'object':
@@ -271,7 +195,7 @@ angular.module('lf.service.validation', [])
 
                     if (-1 !== ['string', 'array'].indexOf(dataType)
                         && angular.isNumber(+minLength)) {
-                        
+
                         return data.length >= minLength;
                     } else {
                         return true;
@@ -324,7 +248,7 @@ angular.module('lf.service.validation', [])
                 message = message.replace('{PARAM}', param);
             }
 
-            return ['[LegoValidationError] Lego (', lego.name, ') ', message].join('');
+            return [lego.label, ' ', message].join('');
         }
     });
 angular.module('lf.lego.checkbox', [])
@@ -332,16 +256,16 @@ angular.module('lf.lego.checkbox', [])
 
         var ngModelCtrl;
 
-        if (!$scope.checkboxOptions) {
-            $scope.checkboxOptions = {};
-        }
-
         this.init = function (_ngModelCtrl) {
 
             ngModelCtrl = _ngModelCtrl;
         };
 
+        $scope.$on('lf.event.validation.checkbox', function(event, data) {
 
+            $scope.validationError = data;
+        });
+        
         $scope.check = function (one, $event) {
 
             if ($event.target.tagName !== 'INPUT') {
@@ -380,16 +304,16 @@ angular.module('lf.lego.checkbox', [])
             require: ['legoCheckbox', 'ngModel'],
             restrict: 'E',
             scope: {
-                checkboxOptions: '=?'
+                lego: '='
             },
             templateUrl: 'lf/checkbox.html',
             controller: 'CheckboxController',
             link: function (scope, elem, attrs, ctrls) {
 
-                var radioCtrl = ctrls[0],
+                var checkboxCtrl = ctrls[0],
                     ngModelCtrl = ctrls[1];
 
-                radioCtrl.init(ngModelCtrl);
+                checkboxCtrl.init(ngModelCtrl);
 
             }
         }
@@ -447,7 +371,7 @@ angular.module('lf.lego.form', [])
     });
 
 angular.module('lf.lego.input', [])
-    .controller('InputController', function () {
+    .controller('InputController', ['$scope', function ($scope) {
 
         var ngModelCtrl;
 
@@ -455,14 +379,18 @@ angular.module('lf.lego.input', [])
             ngModelCtrl = _ngModelCtrl;
         };
 
-    })
+        $scope.$on('lf.event.validation.input', function(event, data) {
+            
+            $scope.validationError = data;
+        });
+    }])
     .directive('legoInput', function () {
         return {
             require: ['legoInput', 'ngModel'],
             restrict: 'E',
             scope: {
-                maxLength: '=?',
-                ngModel: '=?'
+                ngModel: '=',
+                lego: '='
             },
             templateUrl: 'lf/input.html',
             controller: 'InputController',
@@ -484,10 +412,6 @@ angular.module('lf.lego.radio', [])
 
         var ngModelCtrl;
 
-        if (!$scope.radioOptions) {
-            $scope.radioOptions = {};
-        }
-
         this.init = function (_ngModelCtrl) {
 
             ngModelCtrl = _ngModelCtrl;
@@ -498,10 +422,10 @@ angular.module('lf.lego.radio', [])
             if ($event.target.tagName !== 'INPUT') {
                 return false;
             }
-            
+
             ngModelCtrl.$setViewValue(one.value);
         };
-        
+
         $scope.isChecked = function (one) {
             return ngModelCtrl.$modelValue === one.value;
         }
@@ -511,7 +435,7 @@ angular.module('lf.lego.radio', [])
             require: ['legoRadio', 'ngModel'],
             restrict: 'E',
             scope: {
-                radioOptions: '=?'
+                lego: '=?'
             },
             templateUrl: 'lf/radio.html',
             controller: 'RadioController',
@@ -521,6 +445,36 @@ angular.module('lf.lego.radio', [])
                     ngModelCtrl = ctrls[1];
 
                 radioCtrl.init(ngModelCtrl);
+
+            }
+        }
+    });
+angular.module('lf.lego.select', [])
+    .controller('SelectController', ['$scope', function ($scope) {
+
+        var ngModelCtrl;
+
+        this.init = function (_ngModelCtrl) {
+
+            ngModelCtrl = _ngModelCtrl;
+        };
+    }])
+    .directive('legoSelect', function () {
+        return {
+            require: ['legoSelect', 'ngModel'],
+            restrict: 'E',
+            scope: {
+                lego: '=',
+                ngModel: '='
+            },
+            templateUrl: 'lf/select.html',
+            controller: 'SelectController',
+            link: function (scope, elem, attrs, ctrls) {
+
+                var selectCtrl = ctrls[0],
+                    ngModelCtrl = ctrls[1];
+
+                selectCtrl.init(ngModelCtrl);
 
             }
         }
@@ -588,10 +542,11 @@ angular.module('lf.lego.textarea', [])
 
 angular.module("lf/checkbox.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("lf/checkbox.html",
+    "<label ng-bind=\"lego.label\"></label><span style=\"color:red\" ng-bind=\"validationError[lego.name]\"></span>\n" +
     "<div class=\"lf-lego-checkbox\">\n" +
-    "    <label class=\"item\" ng-repeat=\"one in checkboxOptions\" ng-click=\"check(one, $event)\">\n" +
-    "        <input type=\"checkbox\" ng-checked=\"isChecked(one)\">\n" +
-    "        <span class=\"label\" ng-bind=\"one.label\"></span>\n" +
+    "    <label class=\"item\" ng-repeat=\"one in lego.options\" ng-click=\"check(one, $event)\">\n" +
+    "        <input type=\"checkbox\" ng-checked=\"isChecked(one)\" ng-disabled=\"lego.states.disabled\">\n" +
+    "        <span class=\"label-text\" ng-bind=\"one.label\"></span>\n" +
     "    </label>\n" +
     "</div>");
 }]);
@@ -599,58 +554,75 @@ angular.module("lf/checkbox.html", []).run(["$templateCache", function($template
 angular.module("lf/form.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("lf/form.html",
     "<form class=\"form\">\n" +
+    "    <div class=\"row\">\n" +
+    "        <div ng-repeat=\"lego in legoDef\" ng-switch=\"lego.type\" class=\"col-md-{{lego.style.width}}\">\n" +
+    "            <div class=\"form-group\">\n" +
     "\n" +
-    "    <div ng-repeat=\"lego in legoDef\" ng-switch=\"lego.type\" class=\"form-group\">\n" +
+    "                <!-- input -->\n" +
+    "                <lego-input\n" +
+    "                        ng-switch-when=\"input\"\n" +
+    "                        lego=\"lego\"\n" +
+    "                        ng-model=\"ngModel[lego.name]\"\n" +
+    "                ></lego-input>\n" +
     "\n" +
-    "        <label ng-bind=\"lego.label\"></label>\n" +
+    "                <!-- radio -->\n" +
+    "                <lego-radio\n" +
+    "                        ng-switch-when=\"radio\"\n" +
+    "                        lego=\"lego\"\n" +
+    "                        ng-model=\"ngModel[lego.name]\"\n" +
+    "                ></lego-radio>\n" +
     "\n" +
-    "        <!-- input -->\n" +
-    "        <lego-input \n" +
-    "                ng-switch-when=\"input\"\n" +
-    "                ng-model=\"ngModel[lego.name]\"\n" +
-    "                max-length=\"lego.max_length\"\n" +
-    "        ></lego-input>\n" +
+    "                <!-- checkbox -->\n" +
+    "                <lego-checkbox\n" +
+    "                        ng-switch-when=\"checkbox\"\n" +
+    "                        lego=\"lego\"\n" +
+    "                        ng-model=\"ngModel[lego.name]\"\n" +
+    "                ></lego-checkbox>\n" +
     "\n" +
-    "        <!-- radio -->\n" +
-    "        <lego-radio\n" +
-    "                ng-switch-when=\"radio\"\n" +
-    "                ng-model=\"ngModel[lego.name]\"\n" +
-    "                radio-options=\"lego.options\"\n" +
-    "        ></lego-radio>\n" +
+    "                <!-- select -->\n" +
+    "                <lego-select\n" +
+    "                        ng-switch-when=\"select\"\n" +
+    "                        lego=\"lego\"\n" +
+    "                        ng-model=\"ngModel[lego.name]\"\n" +
+    "                ></lego-select>\n" +
     "\n" +
-    "        <!-- checkbox -->\n" +
-    "        <lego-checkbox\n" +
-    "                ng-switch-when=\"checkbox\"\n" +
-    "                ng-model=\"ngModel[lego.name]\"\n" +
-    "                checkbox-options=\"lego.options\"\n" +
-    "                max-length=\"lego.max_length\"\n" +
-    "        ></lego-checkbox>\n" +
-    "        \n" +
-    "        <!-- textarea -->\n" +
-    "        <lego-textarea\n" +
-    "                ng-switch-when=\"textarea\"\n" +
-    "                ng-model=\"ngModel[lego.name]\"\n" +
-    "                max-length=\"lego.max_length\"\n" +
-    "        ></lego-textarea>\n" +
+    "                <!-- textarea -->\n" +
+    "                <lego-textarea\n" +
+    "                        ng-switch-when=\"textarea\"\n" +
+    "                        lego=\"lego\"\n" +
+    "                        ng-model=\"ngModel[lego.name]\"\n" +
+    "                ></lego-textarea>\n" +
+    "\n" +
+    "            </div>\n" +
+    "        </div>\n" +
     "    </div>\n" +
-    "\n" +
     "    <lego-submit ng-model=\"ngModel\"></lego-submit>\n" +
     "</form>");
 }]);
 
 angular.module("lf/input.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("lf/input.html",
-    "<input type=\"text\" ng-model=\"ngModel\" ng-change=\"change()\" maxlength=\"{{maxLength}}\" class=\"form-control\">");
+    "<label ng-bind=\"lego.label\"></label><span style=\"color:red\" ng-bind=\"validationError[lego.name]\"></span>\n" +
+    "<input type=\"text\" ng-model=\"ngModel\" ng-change=\"change()\" ng-disabled=\"lego.states.disabled\"\n" +
+    "       maxlength=\"{{maxLength}}\" class=\"form-control\">");
 }]);
 
 angular.module("lf/radio.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("lf/radio.html",
+    "<label ng-bind=\"lego.label\"></label>\n" +
     "<div class=\"lf-lego-radio\">\n" +
-    "    <label class=\"item\" ng-repeat=\"one in radioOptions\" ng-click=\"check(one, $event)\">\n" +
-    "        <input type=\"radio\" ng-checked=\"isChecked(one)\">\n" +
-    "        <span class=\"label\" ng-bind=\"one.label\"></span>\n" +
+    "    <label class=\"item\" ng-repeat=\"one in lego.options\" ng-click=\"check(one, $event)\">\n" +
+    "        <input type=\"radio\" ng-checked=\"isChecked(one)\" ng-disabled=\"lego.states.disabled\">\n" +
+    "        <span class=\"label-text\" ng-bind=\"one.label\"></span>\n" +
     "    </label>\n" +
     "</div>");
+}]);
+
+angular.module("lf/select.html", []).run(["$templateCache", function($templateCache) {
+  $templateCache.put("lf/select.html",
+    "<label ng-bind=\"lego.label\"></label>\n" +
+    "<select class=\"form-control\" ng-options=\"o.value as o.label for o in lego.options\" \n" +
+    "        ng-model=\"ngModel\" ng-disabled=\"lego.states.disabled\"></select>");
 }]);
 
 angular.module("lf/submit.html", []).run(["$templateCache", function($templateCache) {
@@ -662,5 +634,5 @@ angular.module("lf/submit.html", []).run(["$templateCache", function($templateCa
 
 angular.module("lf/textarea.html", []).run(["$templateCache", function($templateCache) {
   $templateCache.put("lf/textarea.html",
-    "<textarea ng-model=\"ngModel\" maxlength=\"{{maxLength}}\" class=\"form-control\"></textarea>");
+    "<textarea ng-model=\"ngModel\" ng-disabled=\"lego.states.disabled\" maxlength=\"{{maxLength}}\" class=\"form-control\"></textarea>");
 }]);

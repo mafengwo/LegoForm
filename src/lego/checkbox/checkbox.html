@@ -1,7 +1,7 @@
 <label ng-bind="lego.label"></label><span style="color:red" ng-bind="validationError[lego.name]"></span>
 <div class="lf-lego-checkbox">
     <label class="item" ng-repeat="one in lego.options" ng-click="check(one, $event)">
-        <input type="checkbox" ng-checked="isChecked(one)">
+        <input type="checkbox" ng-checked="isChecked(one)" ng-disabled="lego.states.disabled">
         <span class="label-text" ng-bind="one.label"></span>
     </label>
 </div>

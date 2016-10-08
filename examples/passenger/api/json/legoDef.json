@@ -21,7 +21,10 @@
         "label": "Female",
         "value": 1
       }
-    ]
+    ],
+    "states": {
+        "disabled": true
+    }
   },
   {
     "name": "cities",
