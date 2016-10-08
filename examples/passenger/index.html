@@ -16,7 +16,6 @@
     </div>
     <div class="panel-body">
         <lego-form lego-def="config.legoDef" ng-model="config.passenger"></lego-form>
-
     </div>
 </div>
 
@@ -25,10 +24,7 @@
     angular.module('app', ['LegoForm'])
             .controller('PassengerController', ['$scope', '$http', function ($scope, $http) {
 
-
-                $scope.config = {
-                    legoDef: [], passenger: {}
-                };
+                $scope.config = {};
                 $http.get('/api/legoDef').success(function (res) {
                     $scope.config.legoDef = res;
                 });
